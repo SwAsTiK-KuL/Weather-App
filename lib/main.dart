@@ -32,7 +32,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();     // Controller for the text field
   late AnimationController _animationController;
   late Animation<double> _animation;
   static const String lastSearchedCityKey = 'lastSearchedCity';
@@ -62,12 +62,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _animateButton() {
-    _animationController.forward(from: 0.0);
+    _animationController.forward(from: 0.0);   // Trigger the button animation
   }
 
   Future<void> _loadLastSearchedCity() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lastCity = prefs.getString(lastSearchedCityKey);
+    final prefs = await SharedPreferences.getInstance();     // Load the last searched city from shared preferences
+    final lastCity = prefs.getString(lastSearchedCityKey);    // Load the list of previously searched cities from shared preferences
     if (lastCity != null) {
       setState(() {
         _controller.text = lastCity;
@@ -77,13 +77,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   Future<void> _loadSearchedCities() async {
     final prefs = await SharedPreferences.getInstance();
-    final cities = prefs.getStringList(searchedCitiesKey) ?? [];
+    final cities = prefs.getStringList(searchedCitiesKey) ?? [];   // Save the last searched city
     setState(() {
       _searchedCities = cities;
     });
 
     for (String city in cities) {
-      await _fetchTemperature(city);
+      await _fetchTemperature(city);    // Fetch the temperature for the new city
     }
   }
 
@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       _isRefreshing = true;
     });
     for (String city in _searchedCities) {
-      await _fetchTemperature(city);
+      await _fetchTemperature(city);         // Refresh the temperature for each city
     }
     setState(() {
       _isRefreshing = false;
@@ -140,9 +140,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _searchWeather(String city) {
-    _animateButton();
-    _saveLastSearchedCity(city);
-    _saveSearchedCity(city);
+    _animateButton();               // Trigger the button animation
+    _saveLastSearchedCity(city);    // Save the last searched city
+    _saveSearchedCity(city);          // Save the city to the list of searched cities
     Future.delayed(const Duration(milliseconds: 500), () {
       Navigator.push(
         context,
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ),
                       IconButton(
                         icon: Icon(Icons.refresh),
-                        onPressed: _isRefreshing ? null : _refreshTemperatures,
+                        onPressed: _isRefreshing ? null : _refreshTemperatures,    // Refresh temperatures on button press
                       ),
                     ],
                   ),
@@ -312,7 +312,7 @@ class _WeatherDetailsScreenState extends State<WeatherDetailsScreen>
   @override
   void initState() {
     super.initState();
-    _fetchWeather();
+    _fetchWeather();                 // Fetch the weather details when the screen is initialized
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -347,7 +347,7 @@ class _WeatherDetailsScreenState extends State<WeatherDetailsScreen>
       if (currentWeatherResponse.statusCode == 200 &&
           hourlyForecastResponse.statusCode == 200) {
         setState(() {
-          _weatherData = json.decode(currentWeatherResponse.body);
+          _weatherData = json.decode(currentWeatherResponse.body);    // Store the current weather data
           _hourlyForecast =
               json.decode(hourlyForecastResponse.body)['list'].take(5).toList();
           _animationController.forward(); // Trigger animation on successful data fetch
@@ -382,7 +382,7 @@ class _WeatherDetailsScreenState extends State<WeatherDetailsScreen>
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(Icons.refresh, color: Colors.black54),
             onPressed: _refreshWeather,
           ),
         ],
@@ -452,13 +452,7 @@ class _WeatherDetailsScreenState extends State<WeatherDetailsScreen>
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Text(
-                              //   'Weather',
-                              //   style: TextStyle(
-                              //     fontSize: 16,
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
+
                               SizedBox(height: 5), // Adjust spacing as needed
                               Row(
                                 children: [
